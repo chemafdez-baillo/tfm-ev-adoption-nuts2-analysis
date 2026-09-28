@@ -53,23 +53,35 @@ CLUSTERING
 · Silhouette analysis for optimal k selection
 
 
+
 ---
 
 ## 📊 Key Findings
 
-- The OLS model with robust errors explains **67.6% of the variance** 
-  in regional EV adoption rates (Adjusted R² = 0.676).
-- Four distinct regional profiles were identified:
-  - **Profile 1** — High adoption: wealthy urban regions with dense charging 
-    infrastructure (Nordic countries, NL, AT)
-  - **Profile 2** — Growing markets: mid-income regions with strong policy 
-    incentives (FR, DE, ES metropolitan areas)
-  - **Profile 3** — Lagging regions: lower-income areas with sparse 
-    infrastructure (Eastern EU)
-  - **Profile 4** — Rural/peripheral: low density, limited grid access, 
-    minimal adoption regardless of income
-- Charging infrastructure density and regional GDP per capita emerged as 
-  the strongest predictors across all model specifications.
+**Regression (M4 — Joint model, n = 236):**
+
+| Variable | β | p-value |
+|---|---|---|
+| SC1 (socioeconomic composite) | 0.826 | < 0.001 |
+| tert_share (tertiarisation) | −1.708 | < 0.001 |
+| RC1 (accessible charging supply) | 0.331 | < 0.001 |
+| RC2 (charging-to-EV ratio) | −0.145 | < 0.05 |
+| own_tax_gdp (property tax exemption) | 53.81 | < 0.01 |
+| pol_1yr_gdp (total 1st-year incentive) | −0.835 | 0.075 |
+
+**Four regional profiles (K-means, k = 4, n = 223):**
+
+| Cluster | Label | n | ev_share | Profile |
+|---|---|---|---|---|
+| C1 | **Pioneers** | 15 | 4.49% | High SC1, very high RC1, low incentives — organic adoption driven by structural conditions. Netherlands, Belgium, Denmark, NW Germany |
+| C4 | **Prosperous & Tertiarised** | 27 | 1.43% | High SC1, highest tert_share — adoption below expectations despite high income; advanced-services metros |
+| C3 | **European Average** | 148 | 2.11% | Neutral on all dimensions — France, Spain, Italy, Germany, Poland; largest margin for incremental improvement |
+| C2 | **Low Development & Compensatory Policy** | 33 | 0.37% | Low SC1, low RC1, highest incentives — financial incentives cannot overcome structural barriers; Eastern and Southern Europe |
+
+**Main conclusions:**
+- Socioeconomic factors are the strongest determinant (adj. R² = 0.605 for M1 alone)
+- Charging infrastructure has a positive and independent effect on EV adoption
+- Financial incentives show a negative coefficient due to endogeneity: countries with lower organic adoption apply more generous incentives precisely to compensate for structural disadvantage
 
 ---
 
@@ -84,24 +96,6 @@ CLUSTERING
 | Visualisation | `ggplot2`, `patchwork` |
 | Regression & diagnostics | `lmtest`, `sandwich`, `car`, `broom` |
 | Reporting | `kableExtra` |
-
----
-
-## 📁 Repository Structure
-
-📦 tfm-ev-adoption-europe
-┣ 📂 data
-┃ ┗ 📄 nuts2_ev_dataset.xlsx # Raw dataset (236 regions × variables)
-┣ 📂 scripts
-┃ ┣ 📄 01_eda_correlations.R # Exploratory analysis & correlation matrices
-┃ ┣ 📄 02_pca_analysis.R # PCA with varimax rotation
-┃ ┣ 📄 03_regression_ols.R # OLS regression with robust errors
-┃ ┗ 📄 04_clustering_kmeans.R # K-means clustering & profiling
-┣ 📂 outputs
-┃ ┣ 📂 figures # Exported plots (PNG)
-┃ ┗ 📂 tables # Exported regression & cluster tables
-┗ 📄 README.md
-
 
 ---
 
